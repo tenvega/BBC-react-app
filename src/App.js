@@ -6,7 +6,8 @@ class Feed extends Component {
   render() {
     // Receive state from parent component via props.
     // let feed = RECEIVE STATE FROM PARENT
-    let renderFeed = Feed.map((article) => {
+    let feed = this.props.feed;
+    let renderFeed = feed.map((article) => {
       // The API returns a blank img placeholder if there is no image.
       // We will change that to an actual image for a more polished finish.
       let imgUrl;
@@ -44,8 +45,8 @@ class Feed extends Component {
         <hr className="divider"/>
         <div className="col-md-12">
           <div className="row">
-            {/* Pass in the loader via props.*/}
-            {/* Pass in the renderFeed object. */}
+            {this.props.loader}
+            {renderFeed}
           </div>
         </div>
       </div>
@@ -83,7 +84,7 @@ class App extends Component {
     let newsFeed = this.state.feed;
     let tmp = newsFeed.slice(newsFeed);
     let randomArray = [];
-    // We use a for loop to iterate over the length of the array six time.
+    // We use a for loop to iterate over the length of the array six times.
     // Then we grab a random news headline in each iteration, removing duplicates.
     for (let i = 0; i < 6; i++) {
       let index = Math.floor(Math.random() * tmp.length);
@@ -92,10 +93,12 @@ class App extends Component {
       randomArray.push(removed[0]);
     }
     // Set state. When the button is clicked, set the state for randomFeed and the loader.
-
+    this.setState({randomFeed: randomArray, loader: ''})
+}
 
 
   //SPECIFY-LIFECYCLE-HOOK() {
+  componentWillMount() {
   // Set your API URL with the API key.
   let url = "https://newsapi.org/v1/articles?source=bbc-news&sortBy=top&apiKey=91899237e3de496681d0a89e574e0747";
   // We use regex to extra website name.
@@ -113,15 +116,16 @@ class App extends Component {
 
 
 render() {
+
   return (
     <div className="App row">
       <div className="col-md-12 hd">
         <h1 className="hd-title">{this.state.site}</h1>
         <h2 className="hd-sub">News Randomizer</h2>
-      </div>
-      {/* Pass in the child component*/}
-      {/* Share state with the child*/}
-      {/* Your code here*/}
+       </div>
+        <Feed feed={this.state.randomFeed} onClick={this.randomizer} loader={this.state.loader}/>
+
+
     </div>
   );
 }
